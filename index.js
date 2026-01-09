@@ -1,16 +1,17 @@
+require("dotenv").config();
 const token = process.env.DISCORD_TOKEN;
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
 
 // Create collection for commands
-const client = require('client.js');
+const client = require('./client.js');
 client.commands = new Collection();
 
 // Access commands folders
 const commandsPath = path.join(__dirname, 'commands', 'messageCommands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-const slashCommandsPath = path.join(commandsPath, 'slashCommands');
+const slashCommandsPath = path.join(__dirname, 'commands', 'slashCommands');
 const slashCommandFiles = fs.readdirSync(slashCommandsPath).filter(file => file.endsWith('.js'));
 
 // Load commands

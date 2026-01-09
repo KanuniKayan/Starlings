@@ -2,7 +2,7 @@
 
 // Imports
 const { Events } = require('discord.js');
-const { setDbClient } = require('queries/db_index.js');
+const { setDbClient } = require('../queries/db_index.js');
 
 module.exports = {
     name: Events.ClientReady,

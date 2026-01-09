@@ -4,6 +4,8 @@
 // In the last section, you can choose between updating it for a specific server or all servers the bot is in.
 // This distinction is great for changing it only in a test environment
 
+require("dotenv").config();
+
 const { REST, Routes } = require('discord.js');
 const clientId = process.env.CLIENT_ID;
 const guildId = process.env.GUILD_ID;

@@ -4,7 +4,6 @@
 const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
-const { setPrefix } = require('../../queries');
 
 // Command
 module.exports = {
