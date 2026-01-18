@@ -5,12 +5,31 @@
 const { query } = require('../database.js');
 
 let client;
-
-// Fetching client after bot is fully ready
 async function setDbClient(cl) {
     client = cl;
     console.log(`Client retrieved for queries`);
 }
+
+async function addGuild(guild)
+{
+    await query("INSERT INTO servers (server_id, server_name, member_count) VALUES ($1, $2, $3);",
+        [guild.id, guild.name, guild.memberCount]);
+}
+
+async function getPrefix(server_id)
+{
+    const result = await query ("SELECT prefix FROM servers WHERE server_id = $1;", [server_id]);
+    return result.rows[0].prefix;
+}
+
+async function setPrefix(server_id, prefix)
+{
+    return await query ("UPDATE servers SET prefix = $2 WHERE server_id = $1;", [server_id, prefix]);
+}
+
+
+
+
 
 /*
    Reminder for id usage:
@@ -21,4 +40,7 @@ async function setDbClient(cl) {
 // Accessible from other code
 module.exports = {
     setDbClient,
+    addGuild,
+    setPrefix,
+    getPrefix,
 };

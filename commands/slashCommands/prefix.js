@@ -1,7 +1,8 @@
 // A slash command that allows you to set a prefix for your server
 
 // Imports
-const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
+const { SlashCommandBuilder, PermissionsBitField, MessageFlags } = require('discord.js');
+const { setPrefix } = require("../../queries/db_index.js")
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -17,25 +18,22 @@ module.exports = {
         ),
     async execute(interaction) {
 
-        // Return until database prefix added
-        console.log("Prefix file used")
-        return
-
         // Allow only administrators of servers to use this command
-        if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator))
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.MANAGE_MESSAGES))
         {
-            console.log('Missing permissions');
-            interaction.reply(`Missing permissions`);
+            interaction.reply({
+                content: `Missing permissions`,
+                flags: MessageFlags.Ephemeral,
+            });
             return;
         }
 
         // Collect id and prefix
         const server_id = interaction.guildId;
         const prefix = interaction.options.getString('prefix');
-        if (prefix.length > 3)
+        if (prefix.length < 1 || prefix.length > 3)
         {
-            console.log('Prefix too long');
-            interaction.reply(`Prefix must be 3 characters or less.`);
+            interaction.reply({content: `Prefix must be between 1 and 3 characters.`, flags: MessageFlags.Ephemeral});
             return;
         }
 
@@ -44,16 +42,16 @@ module.exports = {
             const result = await setPrefix(server_id, prefix);
             if (result)
             {
-                await interaction.reply(`Prefix has been changed to ${prefix}`);
-                console.log(`Prefix for server ${interaction.guildId} has been changed to ${prefix}`);
+                await interaction.reply(`Prefix has been changed to **${prefix}**`);
+                console.log(`Prefix for server ${interaction.guildId} has been changed to '${prefix}'`);
             }
             else
             {
-                await interaction.reply(`Something went wrong applying this prefix`);
-                console.log(`Could not change prefix for server ${interaction.guildId} with prefix ${prefix}`);
+                await interaction.reply({content: `Something went wrong applying this prefix`, flags: MessageFlags.Ephemeral});
+                console.log(`Could not change prefix for server ${interaction.guildId} with prefix '${prefix}'`);
             }
         } catch {
-            console.log(`Something went wrong applying prefix ${prefix} for server ${interaction.guildId}`);
+            console.log(`Something went wrong applying prefix '${prefix}' for server ${interaction.guildId}`);
         }
     }
 }

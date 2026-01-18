@@ -7,13 +7,13 @@ module.exports = {
         if (!interaction.isChatInputCommand()) return;
 
         const command = interaction.client.commands.get(interaction.commandName);
-        console.log('Command: ' + command);
+        console.log(`User '${interaction.user.globalName}' executed: '${interaction.commandName}' at ${new Date().toLocaleString()}`);
 
         if (!command) {
             await interaction.reply(`${interaction.commandName} not found`);
             return;
         }
 
-        command.execute(interaction);
+        await command.execute(interaction);
     }
 }
