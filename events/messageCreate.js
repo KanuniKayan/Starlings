@@ -1,14 +1,25 @@
 // Imports
-const { Events } = require('discord.js');
-const { getPrefix } = require("../queries/db_index.js");
+const { Events, MessageFlags } = require('discord.js');
+const { getPrefix, getRestriction, setRestriction } = require("../queries/db_index.js");
 
 // Command
 module.exports = {
     name: Events.MessageCreate,
     async execute(message) {
         try {
-            // check correct channel
+
             if (message.author.bot) return;
+
+            // check correct channel
+            let correctChannel = false;
+            const restricts = await getRestriction(message.guildId);
+            restricts.forEach((channel) => {
+                if (message.channelId === channel.channel_id)
+                {
+                    correctChannel = true;
+                }
+            });
+            if (!correctChannel) return;
 
             // Prefix checking
             let prefix;
@@ -26,12 +37,6 @@ module.exports = {
             // Find command and arguments
             const args = content.substring(prefix.length).toLowerCase().split(" ");
             const commandName = args[0];
-
-            if (commandName === 'restrict')
-            {
-                // Set current channel to restriction
-                return
-            }
 
             let command;
             try {
