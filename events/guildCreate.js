@@ -15,43 +15,41 @@ module.exports = {
 
             // Check or create channel
             const channels = await guild.channels.cache;
-            let exists = false;
+            let starlings_channel;
             let bot_category;
             for (let channel of channels) {
                 let name = channel[1].name;
                 let type = channel[1].type;
                 if (type === 4)
                 {
-                    if (name.toLowerCase().includes('bot')) bot_category = channel;
+                    if (name.toLowerCase().includes('bot')) bot_category = channel[1];
                 }
                 else if (type === 0 && name.toLowerCase().includes('starlings'))
                 {
-                    exists = true;
+                    starlings_channel = channel[1];
                     break;
                 }
             }
 
-            let new_channel;
-            if (!exists)
+            if (!starlings_channel)
             {
                 if (bot_category)
                 {
-                    new_channel = await guild.channels.create({name: '🌟starlings', type: ChannelType.GuildText, topic: 'A dedicated Starlings channel!',
-                        parent: bot_category[1].id})
+                    starlings_channel = await guild.channels.create({name: '🌟starlings', type: ChannelType.GuildText, topic: 'A dedicated Starlings channel!',
+                        parent: bot_category.id})
                         .catch(console.error);
                 }
                 else
                 {
-                    new_channel = await guild.channels.create({name: '🌟starlings', type: ChannelType.GuildText, topic: 'A dedicated Starlings channel!'})
+                    starlings_channel = await guild.channels.create({name: '🌟starlings', type: ChannelType.GuildText, topic: 'A dedicated Starlings channel!'})
                         .catch(console.error);
                 }
             }
 
             // restrict to channel
-            await setRestriction(guild.id, new_channel.id)
-                .then(console.log(`Set channel restriction for server '${guild.id}' with NEW channelId '${new_channel.id}'`))
+            await setRestriction(guild.id, starlings_channel.id)
+                .then(console.log(`Set channel restriction for server '${guild.id}' with NEW channelId '${starlings_channel.id}'`))
                 .catch(console.error);
-
         } catch (error) {
             console.error(`Something went wrong in guildCreate. `, error);
         }
