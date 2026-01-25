@@ -20,7 +20,6 @@ async function addGuild(guild)
     await query("BEGIN;");
     await query("INSERT INTO servers (server_id, server_name, member_count) VALUES ($1, $2, $3);",
         [guild.id, guild.name, guild.memberCount]);
-    await query("INSERT INTO restriction(server_id) VALUES ($1);", [guild.id]);
     return await query("COMMIT;");
 
 }

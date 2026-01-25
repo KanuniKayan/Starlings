@@ -10,6 +10,8 @@ module.exports = {
 
             if (message.author.bot) return;
 
+            // For loop instead? Earlier exit? Negligible but... y'know.
+
             // check correct channel
             let correctChannel = false;
             const restricts = await getRestriction(message.guildId);
