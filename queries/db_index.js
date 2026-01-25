@@ -10,6 +10,11 @@ async function setDbClient(cl) {
     console.log(`Client retrieved for queries`);
 }
 
+async function fetchGuild(guild)
+{
+    return await query("SELECT * FROM servers WHERE server_id = $1;", [guild.id]);
+}
+
 async function addGuild(guild)
 {
     await query("BEGIN;");
@@ -60,7 +65,7 @@ async function removeRestriction(server_id, channel_id)
 // Accessible from other code
 module.exports = {
     setDbClient,
-    addGuild,
+    fetchGuild, addGuild,
     getPrefix, setPrefix,
     getRestriction, setRestriction, removeRestriction,
 

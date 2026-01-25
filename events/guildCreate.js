@@ -1,6 +1,6 @@
 // Imports
-const { Events } = require('discord.js');
-const { addGuild } = require('../queries/db_index.js');
+const { Events, ChannelType } = require('discord.js');
+const { fetchGuild, addGuild, setRestriction } = require('../queries/db_index.js');
 
 // Command
 module.exports = {
